@@ -1,0 +1,6 @@
+.DS_Store
+*.log
+*.pem
+*.rsa
+node_modules
+*/public

@@ -1,0 +1,13 @@
+{
+  "environment": "development",
+  "hydra": {
+    "serviceName": "hpp-service",
+    "serviceIP": "",
+    "servicePort": 6666,
+    "serviceType": "game",
+    "serviceDescription": "Plays hot potato game",
+    "redis": {
+      "url": "redis://127.0.0.1:6379/15"
+    }
+  }
+}
