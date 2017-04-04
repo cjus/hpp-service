@@ -130,4 +130,3 @@ $ docker run -it -d -p 9000:9000 \
   cjus/hpp-service:0.0.1
 ```
 
-  
