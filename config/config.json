@@ -3,7 +3,7 @@
   "hydra": {
     "serviceName": "hpp-service",
     "serviceIP": "",
-    "servicePort": 6666,
+    "servicePort": 9000,
     "serviceType": "game",
     "serviceDescription": "Plays hot potato game",
     "redis": {

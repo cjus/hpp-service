@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node hpp-service.js",
-    "debug": "node-debug hpp-service.js",
+    "debug": "node --inspect --debug-brk hpp-service.js",
     "test": "mocha specs --reporter spec"
   },
   "engines": {

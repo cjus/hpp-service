@@ -29,6 +29,17 @@ class HotPotatoPlayer {
   }
 
   /**
+  * @name logMessage
+  * @summary log a game message
+  * @param {string} str - string message to log
+  * @return {undefined}
+  */
+  logMessage(str) {
+    console.log(str);
+    this.gameLog.push(str);
+  }
+
+  /**
 	* @name messageHandler
 	* @summary handle incoming messages
 	* @param {object} message - message object
@@ -40,8 +51,8 @@ class HotPotatoPlayer {
     }
     if (message.bdy.expiration < Math.floor(Date.now() / 1000)) {
       let gameOverMessage = hydra.createUMFMessage({
-        to: 'hpp:/',
-        frm: 'hpp:/',
+        to: 'hpp-service:/',
+        frm: 'hpp-service:/',
         typ: 'hotpotato',
         bdy: {
           command: 'gameover',
@@ -51,8 +62,19 @@ class HotPotatoPlayer {
       hydra.sendBroadcastMessage(gameOverMessage);
     } else if (message.bdy.command === 'gameover') {
       this.gameOver(message.bdy.result);
+    } else if (message.bdy.command === 'received') {
+      this.logMessage(message.bdy.result);
     } else {
-      this.gameLog.push(`[${this.playerName}]: received hot potato.`);
+      let receivedHotPotatoMessage = hydra.createUMFMessage({
+        to: 'hpp-service:/',
+        frm: 'hpp-service:/',
+        typ: 'hotpotato',
+        bdy: {
+          command: 'received',
+          result: `[${this.playerName}]: received hot potato.`
+        }
+      });
+      hydra.sendBroadcastMessage(receivedHotPotatoMessage);
       this.passHotPotato(message);
     }
   }
@@ -76,8 +98,8 @@ class HotPotatoPlayer {
 	* @return {undefined}
 	*/
   startGame() {
-    const gameDelay = 15000; // 15-seconds in milliseconds
-    const gameLength = 30; // seconds
+    const gameDelay = 3000; // 3-seconds in milliseconds
+    const gameLength = 5; // seconds
     let elapsedSeconds = 0;
     this.isStarter = true;
 
@@ -85,14 +107,14 @@ class HotPotatoPlayer {
       this.resolve = resolve;
       this.reject = reject;
       let timerID = setInterval(() => {
-        this.gameLog.push(`Game starting in: ${ (gameDelay / 1000) - elapsedSeconds} seconds`);
+        this.logMessage(`Game starting in: ${ (gameDelay / 1000) - elapsedSeconds} seconds`);
 
         if (elapsedSeconds === (gameDelay / 1000)) {
-          this.gameLog.push('Sending hot potato...\n');
+          this.gameLog.push('Sending hot potato...');
 
           let hotPotatoMessage = hydra.createUMFMessage({
-            to: 'hpp:/',
-            frm: 'hpp:/',
+            to: 'hpp-service:/',
+            frm: 'hpp-service:/',
             typ: 'hotpotato',
             bdy: {
               command: 'hotpotato',
@@ -114,7 +136,7 @@ class HotPotatoPlayer {
 	* @return {undefined}
 	*/
   gameOver(result) {
-    this.gameLog.push(result);
+    this.logMessage(result);
     if (this.isStarter) {
       this.resolve();
     }
@@ -133,8 +155,8 @@ class HotPotatoPlayer {
         let sent = false;
         for (let i = 0; i < instances.length; i++) {
           if (instances[i].instanceID !== hydra.getInstanceID()) {
-            hotPotatoMessage.to = `${instances[i].instanceID}@hpp:/`;
-            hotPotatoMessage.frm = `${hydra.getInstanceID()}@hpp:/`;
+            hotPotatoMessage.to = `${instances[i].instanceID}@hpp-service:/`;
+            hotPotatoMessage.frm = `${hydra.getInstanceID()}@hpp-service:/`;
             hydra.sendMessage(hotPotatoMessage);
             clearInterval(timerID);
             sent = true;
@@ -142,7 +164,7 @@ class HotPotatoPlayer {
           }
         }
         if (!sent) {
-          this.gameLog.push('No other players found. Try adding players first and then starting the player with the hot potato last.');
+          this.logMessage('No other players found. Try adding players first and then starting the player with the hot potato last.');
           clearInterval(timerID);
         }
       });

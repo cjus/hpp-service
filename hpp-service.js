@@ -25,10 +25,10 @@ config.init('./config/config.json')
     })
       .then((serviceInfo) => {
         console.log('serviceInfo', serviceInfo);
+        player.init();
         hydra.on('message', (message) => {
           player.messageHandler(message);
         });
-        player.init();
       })
       .catch((err) => {
         console.log('err', err);

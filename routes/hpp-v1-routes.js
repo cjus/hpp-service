@@ -3,9 +3,10 @@
  * @description This module packages the hot potato game API.
  */
 'use strict';
-
+const hydraExpress = require('hydra-express');
+const express = hydraExpress.getExpress();
 const ServerResponse = require('fwsp-server-response');
-const player = require('./hot-potato-player');
+const player = require('../hot-potato-player');
 
 let serverResponse = new ServerResponse();
 
