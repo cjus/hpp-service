@@ -4,7 +4,7 @@ A variation on the children's classic game, Hot Potato. Adopted as a distributed
 
 This is an update of an earlier version, however, this version is designed for use in Docker containers and in a Docker swarm.
 
-To learn more about Hydra messaging see: Building a Microservice Example Game with Distributed Message.
+To learn more about Hydra messaging see: [Building a Microservice Example Game with Distributed Message](https://community.risingstack.com/building-a-microservices-example-game-with-distributed-messaging/).
 
 This microservice expects to find other peer microservices (that is other hpp-service(s)) on the same network. The game begins when you access the `/v1/hpp/startgame` endpoint for anyone of the peer services. That will start the Hot Potato game where the current instance sends a hot potato (JSON) message to one of the available peers. The peer that receives the message will in-turn send the message to another peer. The peer holding the hot potato message upon the end of the game will be declared the loser.
 
